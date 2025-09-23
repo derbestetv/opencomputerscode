@@ -100,7 +100,7 @@ while true do
   local e, _, from, port, _, m = computer.pullSignal()
   if e == "modem_message" then
     if port == 2 then
-      if ma ~= m then handleMsg(m) ma = m end
+      handleMsg(m)
     elseif port == 1234 then receiveUpdate(m) end
   elseif e == "redstone" then
     red()
