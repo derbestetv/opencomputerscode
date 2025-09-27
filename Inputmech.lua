@@ -56,17 +56,19 @@ end
 local function handleMsg(msg)
   if not msg or msg == "" then modem.broadcast(6000, "Fehler: Leere oder nil-Nachricht empfangen") return end
 message = unserialize(msg)
-if message.addr ==add then
+if message.addr == add then
     if message.wert =="start" then
         start = 1
-        act = getColorStatusList()
-    modem.broadcast(1,serialize({addr="fs", wert=act}))
+        red()
+    modem.broadcast(1,serialize({addr="fs", wert=1}))
     else
-        colorNames = unserialize(message.wert)
+        table.insert(colorNames, unserialize(message.wert))
+        
     end
 
 end
 end
+
 
 
 local function red()
