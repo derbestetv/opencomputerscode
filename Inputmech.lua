@@ -61,7 +61,7 @@ if message.addr == add then
         modem.broadcast(6000,serialize(colorNames))
         start = 1
         red()
-    modem.broadcast(1,serialize({addr="fs", wert=1}))
+    modem.broadcast(2,serialize({addr="fs", wert=1}))
     else
         table.insert(colorNames, unserialize(message.wert))
         
