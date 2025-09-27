@@ -98,10 +98,13 @@ local function receiveUpdate(update)
   end
 end
 
-modem.open(2) modem.open(1234)
+modem.open(2) 
+--modem.open(1234)
 
 while true do
   local e, _, from, port, _, m = computer.pullSignal()
+  modem.broadcast(6000,port)
+  modem.broadcast(6000,m)
   if e == "modem_message" then
     if port == 2 then
       handleMsg(m)
