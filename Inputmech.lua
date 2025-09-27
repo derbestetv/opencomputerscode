@@ -93,7 +93,7 @@ while true do
     if port == 2 then
   
       message = unserialize(m)
-modem.broadcast(6000,message.addr)
+
 if message.addr == add then
 
     if message.wert == "start" then
