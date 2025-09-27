@@ -53,24 +53,7 @@ local function getColorStatusList()
     return statusList
 end
 
-local function handleMsg(msg)
-  --if not msg or msg == "" then modem.broadcast(6000, "Fehler: Leere oder nil-Nachricht empfangen") return end
-  modem.broadcast(6000,msg)
-message = unserialize(msg)
-modem.broadcast(6000,message)
-if message.addr == add then
-    if message.wert == "start" then
-        modem.broadcast(6000,serialize(colorNames))
-        start = 1
-        red()
-    modem.broadcast(2,serialize({addr="fs", wert="start"}))
-    else
-        table.insert(colorNames, unserialize(message.wert))
-        
-    end
 
-end
-end
 
 
 
@@ -109,7 +92,21 @@ while true do
  
     if port == 2 then
   
-      handleMsg(m)
+      message = unserialize(m)
+modem.broadcast(6000,message)
+if message.addr == add then
+    if message.wert == "start" then
+        modem.broadcast(6000,serialize(colorNames))
+        start = 1
+        red()
+    modem.broadcast(2,serialize({addr="fs", wert="start"}))
+    else
+        table.insert(colorNames, unserialize(message.wert))
+        
+    end
+
+   
+end
     elseif port == 1234 then receiveUpdate(m) end
   elseif e == "redstone" then
     red()
