@@ -105,9 +105,9 @@ while true do
   local e, _, from, port, _, m = computer.pullSignal()
 modem.broadcast(6000,e)
   if e == "modem_message" then
-    modem.broadcast(6000,port)
+    --modem.broadcast(6000,port)
     if port == 2 then
-        modem.broadcast(6000,m)
+        --modem.broadcast(6000,m)
       handleMsg(m)
     elseif port == 1234 then receiveUpdate(m) end
   elseif e == "redstone" then
