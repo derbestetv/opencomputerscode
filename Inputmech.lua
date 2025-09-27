@@ -55,6 +55,7 @@ end
 
 local function handleMsg(msg)
   if not msg or msg == "" then modem.broadcast(6000, "Fehler: Leere oder nil-Nachricht empfangen") return end
+  modem.broadcast(6000,msg)
 message = unserialize(msg)
 if message.addr == add then
     if message.wert == "start" then
