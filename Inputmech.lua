@@ -93,15 +93,16 @@ while true do
     if port == 2 then
   
       message = unserialize(m)
-modem.broadcast(6000,message)
+modem.broadcast(6000,message.addr)
 if message.addr == add then
+
     if message.wert == "start" then
         modem.broadcast(6000,serialize(colorNames))
         start = 1
         red()
     modem.broadcast(2,serialize({addr="fs", wert="start"}))
     else
-        table.insert(colorNames, unserialize(message.wert))
+        table.insert(colorNames, message.wert)
         
     end
 
