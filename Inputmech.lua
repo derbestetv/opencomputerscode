@@ -3,8 +3,7 @@ local rs, modem, eeprom = component.proxy(component.list("redstone")()), compone
 local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local ac, ma, DOWN, UP, SOUTH, EAST, WEST = { "", "", "", "", "" }, "", 0, 1, 3, 4, 5
 local activeColors = { [0] = "", [1] = "", [3] = "", [4] = "", [5] = "" }
-local colorBits = { white, orange, magenta, lightBlue, yellow, lime, pink, gray, lightGray, cyan, purple, blue, brown,
-    green, red, black }
+local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown","green", "red", "black" }
 local colorNames = {}
 modem.broadcast(6000, add)
 local start = 0
