@@ -38,7 +38,7 @@ end
 
 local function getColorStatusList()
     local input = rs.getBundledInput()[UP]
-    modem.broadcast(6000, "input  "..serialize(input))
+    modem.broadcast(6000, "input  "..serialize(colorBits))
     local statusList = {}
     for i, color in ipairs(colorBits) do
         if input[i] > 0 then
@@ -64,7 +64,7 @@ end
 
 
 local function red1()
-    modem.broadcast(6000, "red1")
+
         act = getColorStatusList()
         local changed = {}
         for i, entry in ipairs(act) do
