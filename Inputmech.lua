@@ -59,7 +59,6 @@ local function getColorStatusList()
 end
 
 local function red1()
-
         act = getColorStatusList()
         local changed = {}
         for i, entry in ipairs(act) do
@@ -74,8 +73,6 @@ local function red1()
 end
 
 modem.open(2)
---modem.open(1234)
-
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
 modem.broadcast(6000, e)
