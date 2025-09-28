@@ -48,7 +48,7 @@ local function getColorStatusList()
         local cname = ""
         for i, color1 in ipairs(colorNames) do
             if color1["color"] == color then
-             cname = color1[name] 
+             cname = color1["name"] 
             break
             end
         end
