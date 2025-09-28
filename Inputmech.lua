@@ -5,6 +5,7 @@ local ac, ma, DOWN, UP, SOUTH, EAST, WEST = { "", "", "", "", "" }, "", 0, 1, 3,
 local activeColors = { [0] = "", [1] = "", [3] = "", [4] = "", [5] = "" }
 local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown","green", "red", "black" }
 local colorNames = {}
+local lastStatus = {}
 modem.broadcast(6000, add)
 local start = 0
 function serialize(tbl)
@@ -107,6 +108,7 @@ while true do
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 else
                     table.insert(colorNames, message.wert)
+                    
                 end
             end
         end
