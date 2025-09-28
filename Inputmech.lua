@@ -95,6 +95,7 @@ while true do
                 end
             end
         end
+        modem.broadcast(6000, start)
     elseif e == "redstone" and start == 1 then
         red1()
     end
