@@ -7,40 +7,34 @@ local colorNames = {}
 modem.broadcast(6000,add)
 local start = 0
 function serialize(tbl)
-    local parts = {}
-    for k, v in pairs(tbl) do
-        if type(v) == "number" then
-            table.insert(parts, k..":"..v)
-        elseif type(v) == "boolean" then
-            table.insert(parts, k..":"..(v and "1" or "0"))
-        elseif type(v) == "string" then
-            table.insert(parts, k..":'"..v.."'")
+    local function ser(val)
+        if type(val) == "number" then
+            return tostring(val)
+        elseif type(val) == "boolean" then
+            return val and "true" or "false"
+        elseif type(val) == "string" then
+            return string.format("%q", val)
+        elseif type(val) == "table" then
+            local items = {}
+            for k, v in pairs(val) do
+                table.insert(items, "[" .. ser(k) .. "]=" .. ser(v))
+            end
+            return "{" .. table.concat(items, ",") .. "}"
+        else
+            return "nil"
         end
     end
-    return table.concat(parts, ";")
+    return ser(tbl)
 end
 
 -- Deserialisierung: String → Table
 function unserialize(str)
-    local tbl = {}
-    for part in str:gmatch("([^;]+)") do
-        local k, v = part:match("([^:]+):(.+)")
-        if k and v then
-            if v:match("^%d+$") then
-                tbl[k] = tonumber(v)
-            elseif v == "1" then
-                tbl[k] = true
-            elseif v == "0" then
-                tbl[k] = false
-            elseif v:match("^'(.*)'$") then
-                tbl[k] = v:match("^'(.*)'$")
-            else
-                tbl[k] = v
-            end
-        end
-    end
-    return tbl
+    local f, err = load("return " .. str, nil, "t", {})
+    if not f then return nil, err end
+    return f()
 end
+
+
 local function getColorStatusList()
     local input = rs.getBundledInput(UP)
     local statusList = {}
