@@ -56,6 +56,20 @@ end
 
 
 
+local function red1()
+    
+        act = getColorStatusList()
+        local changed = {}
+        for i, entry in ipairs(act) do
+            local name = entry.name
+            local status = entry.status
+            if lastStatus[name] ~= status then
+                modem.broadcast(1, serialize({ addr = "fs", wert = { name = status } }))
+                lastStatus[name] = status
+            end
+        end
+  
+end
 
 
 local function red(start1)
@@ -88,7 +102,7 @@ while true do
                 if message.wert == "start" then
                     modem.broadcast(6000, serialize(colorNames))
                     start = 1
-                    red(start)
+                    red1()
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 else
                     table.insert(colorNames, message.wert)
