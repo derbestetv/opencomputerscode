@@ -45,9 +45,13 @@ local function getColorStatusList()
         else
             local active = false
         end
-
-        local cname = colorNames[color] or color
-
+        local cname = ""
+        for i, color1 in ipairs(colorNames) do
+            if color1["color"] == color then
+             cname = color1[name] 
+            break
+            end
+        end
         local symbol = active and "-" or "+"
         table.insert(statusList, { name = cname, status = symbol })
     end
