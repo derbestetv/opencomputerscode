@@ -73,23 +73,6 @@ local function red1()
   
 end
 
-
-local function red(start1)
-    if start1 == 1 then
-        act = getColorStatusList()
-        local changed = {}
-        for i, entry in ipairs(act) do
-            local name = entry.name
-            local status = entry.status
-            if lastStatus[name] ~= status then
-                modem.broadcast(1, serialize({ name =name , wert = status } ))
-                lastStatus[name] = status
-            end
-        end
-    end
-end
-
-
 modem.open(2)
 --modem.open(1234)
 
@@ -112,7 +95,7 @@ while true do
                 end
             end
         end
-    elseif e == "redstone" then
-        red(start)
+    elseif e == "redstone" and start == 1 then
+        red1()
     end
 end
