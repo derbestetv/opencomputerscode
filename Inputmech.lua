@@ -37,7 +37,7 @@ end
 
 local function getColorStatusList()
     local input = rs.getBundledInput()[UP]
-    modem.broadcast(6000, "input  "..serialize(colorBits))
+    
     local statusList = {}
     for i, color in ipairs(colorBits) do
         if input[i] > 0 then
@@ -54,7 +54,7 @@ local function getColorStatusList()
         end
         
         local symbol = active and "-" or "+"
-        modem.broadcast(6000,"status  ".. serialize({ name = cname, status = symbol }))
+        
         table.insert(statusList, { name = cname, status = symbol })
     end
     return statusList
