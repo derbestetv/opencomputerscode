@@ -1,14 +1,15 @@
-local rs, modem, eeprom = component.proxy(component.list("redstone")()), component.proxy(component.list("modem")()), component.proxy(component.list("eeprom")())
-local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
-local ac, ma, DOWN, UP, SOUTH, EAST, WEST = {"", "", "", "", ""}, "", 0, 1, 3, 4, 5
-local activeColors = {[0] = "", [1] = "", [3] = "",  [4] = "",  [5] = ""  }
-local colorBits = {white = 1, orange = 2, magenta = 4, lightBlue = 8,yellow = 16, lime = 32, pink = 64, gray = 128,lightGray = 256, cyan = 512, purple = 1024, blue = 2048,brown = 4096, green = 8192, red = 16384, black = 32768}
-local colorNames = {}
-modem.broadcast(6000,add)
-local start = 0
-local function serialize(value)
-    pretty = false
- local kw =  {["and"]=true, ["break"]=true, ["do"]=true, ["else"]=true,
+local serialization = {}
+
+-- delay loaded tables fail to deserialize cross [C] boundaries (such as when having to read files that cause yields)
+local local_pairs = function(tbl)
+  local mt = getmetatable(tbl)
+  return (mt and mt.__pairs or pairs)(tbl)
+end
+
+-- Important: pretty formatting will allow presenting non-serializable values
+-- but may generate output that cannot be unserialized back.
+function serialization.serialize(value, pretty)
+  local kw =  {["and"]=true, ["break"]=true, ["do"]=true, ["else"]=true,
                ["elseif"]=true, ["end"]=true, ["false"]=true, ["for"]=true,
                ["function"]=true, ["goto"]=true, ["if"]=true, ["in"]=true,
                ["local"]=true, ["nil"]=true, ["not"]=true, ["or"]=true,
@@ -128,9 +129,8 @@ local function serialize(value)
   return result
 end
 
--- Deserialisierung: String → Table
-local function unserialize(data)
-   checkArg(1, data, "string")
+function serialization.unserialize(data)
+  checkArg(1, data, "string")
   local result, reason = load("return " .. data, "=data", nil, {math={huge=math.huge}})
   if not result then
     return nil, reason
@@ -142,70 +142,4 @@ local function unserialize(data)
   return output
 end
 
-
-local function getColorStatusList()
-    local input = rs.getBundledInput(UP)
-    local statusList = {}
-    for name, bit in pairs(colorBits) do
-        local cname = colorNames[name] or name
-        local active = bit32.band(input, bit) ~= 0
-        local symbol = active and "-" or "+"
-        table.insert(statusList, {name = cname, status = symbol})
-    end
-    return statusList
-end
-
-
-
-
-
-local function red()
-    if start == 1 then
-act = getColorStatusList()
- local changed = {}
-        for i, entry in ipairs(act) do
-            local name = entry.name
-            local status = entry.status
-            if lastStatus[name] ~= status then
-                table.insert(changed, entry)
-                lastStatus[name] = status
-            end
-        end
-        if #changed > 0 then
-            modem.broadcast(1, serialize({addr="fs", wert=changed}))
-        end
-end
-end
-
-
-modem.open(2) 
---modem.open(1234)
-
-while true do
-  local e, _, from, port, _, m = computer.pullSignal()
-
-  if e == "modem_message" then
- 
-    if port == 2 then
-  
-      message = unserialize(m)
-
-if message.addr == add then
-
-    if message.wert == "start" then
-        modem.broadcast(6000,serialize(colorNames))
-        start = 1
-        red()
-    modem.broadcast(2,serialize({addr="fs", wert="start"}))
-    else
-        table.insert(colorNames, message.wert)
-        
-    end
-
-   
-end
-    end 
-  elseif e == "redstone" then
-    red()
-  end
-end
+return serialization
