@@ -51,11 +51,11 @@ function band(a, b)
 end
 
 local function getColorStatusList()
-    local input = rs.getBundledInput(UP)
+    local input = rs.getBundledInput()
     local statusList = {}
     for name, bit in pairs(colorBits) do
         local cname = colorNames[name] or name
-        local active = band(input, bit) ~= 0
+        local active = band(input[UP], bit) ~= 0
         local symbol = active and "-" or "+"
         table.insert(statusList, {name = cname, status = symbol})
     end
