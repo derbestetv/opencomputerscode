@@ -68,13 +68,7 @@ act = getColorStatusList()
         end
 end
 end
-local function receiveUpdate(update)
-  local updateText = binToText(update:gsub("%s+", "")):match("([^_]+)_(.*)")
-  if updateText and updateText[1] == microType then
-    local func, err = load(updateText[2])
-    if func then func() else modem.broadcast(6000, "Fehler beim Laden des Codes: " .. err) end
-  end
-end
+
 
 modem.open(2) 
 --modem.open(1234)
@@ -89,7 +83,7 @@ while true do
       message = unserialize(m)
 
 if message.addr == add then
-
+modem.broadcast(6000,serialize(message))
     if message.wert == "start" then
         modem.broadcast(6000,serialize(colorNames))
         start = 1
@@ -102,7 +96,7 @@ if message.addr == add then
 
    
 end
-    elseif port == 1234 then receiveUpdate(m) end
+    end 
   elseif e == "redstone" then
     red()
   end
