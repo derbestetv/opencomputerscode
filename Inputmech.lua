@@ -42,7 +42,7 @@ local function getColorStatusList()
     modem.broadcast(6000, "colorBits  "..serialize(colorBits))
     local statusList = {}
     for i, color in ipairs(colorBits) do
-        if input[i] > 0 then
+        if input[i-1] > 0 then
             local active = true
         else
             local active = false
