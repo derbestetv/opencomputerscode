@@ -66,7 +66,7 @@ local function red1()
             local name = entry.name
             local status = entry.status
             if lastStatus[name] ~= status then
-                modem.broadcast(1, serialize({ addr = "fs", wert = { name = status } }))
+                modem.broadcast(1, serialize({ name =name , wert = status } ))
                 lastStatus[name] = status
             end
         end
