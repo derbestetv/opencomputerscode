@@ -27,14 +27,12 @@ function serialize(tbl)
     end
     return ser(tbl)
 end
-
 -- Deserialisierung: String → Table
 function unserialize(str)
     local f, err = load("return " .. str, nil, "t", {})
     if not f then return nil, err end
     return f()
 end
-
 
 local function getColorStatusList()
     local input = rs.getBundledInput()[UP]
@@ -59,8 +57,6 @@ local function getColorStatusList()
     end
     return statusList
 end
-
-
 
 local function red1()
 
