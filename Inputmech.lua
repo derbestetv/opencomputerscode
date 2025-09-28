@@ -54,9 +54,7 @@ local function getColorStatusList()
             break
             end
         end
-        
         local symbol = active and "-" or "+"
-        
         table.insert(statusList, { name = cname, status = symbol })
     end
     return statusList
