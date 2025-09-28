@@ -33,14 +33,29 @@ function unserialize(str)
     if not f then return nil, err end
     return f()
 end
-
+-- Bitwise AND ohne bit32
+function band(a, b)
+  local result = 0
+  local bitval = 1
+  while a > 0 and b > 0 do
+    local abit = a % 2
+    local bbit = b % 2
+    if abit == 1 and bbit == 1 then
+      result = result + bitval
+    end
+    a = math.floor(a / 2)
+    b = math.floor(b / 2)
+    bitval = bitval * 2
+  end
+  return result
+end
 
 local function getColorStatusList()
     local input = rs.getBundledInput(UP)
     local statusList = {}
     for name, bit in pairs(colorBits) do
         local cname = colorNames[name] or name
-        local active = bit32.band(input, bit) ~= 0
+        local active = band(input, bit) ~= 0
         local symbol = active and "-" or "+"
         table.insert(statusList, {name = cname, status = symbol})
     end
