@@ -35,6 +35,7 @@ function unserialize(str)
     return f()
 end
 
+
 local function getColorStatusList()
     local input = rs.getBundledInput()[UP]
      modem.broadcast(6000, "input  "..serialize(input))
