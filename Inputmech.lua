@@ -2,7 +2,7 @@ local rs, modem, eeprom = component.proxy(component.list("redstone")()), compone
 local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local ac, ma, DOWN, UP, SOUTH, EAST, WEST = {"", "", "", "", ""}, "", 0, 1, 3, 4, 5
 local activeColors = {[0] = "", [1] = "", [3] = "",  [4] = "",  [5] = ""  }
-local colorBits = {white = 1, orange = 2, magenta = 4, lightBlue = 8,yellow = 16, lime = 32, pink = 64, gray = 128,lightGray = 256, cyan = 512, purple = 1024, blue = 2048,brown = 4096, green = 8192, red = 16384, black = 32768}
+local colorBits = {white, orange, magenta, lightBlue,yellow, lime, pink, gray,lightGray, cyan, purple, blue,brown, green, red, black}
 local colorNames = {}
 modem.broadcast(6000,add)
 local start = 0
@@ -33,29 +33,20 @@ function unserialize(str)
     if not f then return nil, err end
     return f()
 end
--- Bitwise AND ohne bit32
-function band(a, b)
-  local result = 0
-  local bitval = 1
-  while a > 0 and b > 0 do
-    local abit = a % 2
-    local bbit = b % 2
-    if abit == 1 and bbit == 1 then
-      result = result + bitval
-    end
-    a = math.floor(a / 2)
-    b = math.floor(b / 2)
-    bitval = bitval * 2
-  end
-  return result
-end
+
 
 local function getColorStatusList()
-    local input = rs.getBundledInput()
+    local input = rs.getBundledInput()[UP]
     local statusList = {}
-    for name, bit in pairs(colorBits) do
-        local cname = colorNames[name] or name
-        local active = band(input[UP], bit) ~= 0
+    for i, color in ipairs(colorBits) do
+        if input[i] > 0 then
+            local active = true
+        else
+            local active = false
+        end
+        
+        local cname = colorNames[color] or color
+        
         local symbol = active and "-" or "+"
         table.insert(statusList, {name = cname, status = symbol})
     end
@@ -74,13 +65,11 @@ act = getColorStatusList()
             local name = entry.name
             local status = entry.status
             if lastStatus[name] ~= status then
-                table.insert(changed, entry)
+                modem.broadcast(1, serialize({addr="fs", wert={name=status}}))
                 lastStatus[name] = status
             end
         end
-        if #changed > 0 then
-            modem.broadcast(1, serialize({addr="fs", wert=changed}))
-        end
+        
 end
 end
 
