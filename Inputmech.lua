@@ -40,10 +40,11 @@ local function getColorStatusList()
     
     local statusList = {}
     for i, color in ipairs(colorBits) do
+        local active = false
         if input[i-1] > 0 then
-            local active = true
+             active = true
         else
-            local active = false
+             active = false
         end
         local cname = ""
         for i, color1 in ipairs(colorNames) do
@@ -52,11 +53,15 @@ local function getColorStatusList()
             break
             end
         end
+        modem.broadcast(6000, "active "..tostring(active))
         local symbol = active and "-" or "+"
+        modem.broadcast(6000, "symbol "..symbol)
         table.insert(statusList, { name = cname, status = symbol })
     end
     return statusList
 end
+
+
 
 local function red1()
         act = getColorStatusList()
@@ -64,8 +69,6 @@ local function red1()
         for i, entry in ipairs(act) do
             local name = entry.name
             local status = entry.status
-modem.broadcast(6000, lastStatus[name])
-modem.broadcast(6000, status)
             if lastStatus[name] ~= status then
                 modem.broadcast(1, serialize({ name =name , wert = status } ))
                 lastStatus[name] = status
@@ -73,11 +76,9 @@ modem.broadcast(6000, status)
         end
   
 end
-
 modem.open(2)
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
-
 
     if e == "modem_message" then
         if port == 2 then
