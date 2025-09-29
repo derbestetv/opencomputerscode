@@ -93,7 +93,7 @@ modem.broadcast(6000, e)
             end
         end
         
-    elseif e == "redstone_changed" and start == 1 then
+    elseif e == "redstone_changed" and start > 0 then
         red1()
     end
 end
