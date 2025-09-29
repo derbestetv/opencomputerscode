@@ -64,6 +64,8 @@ local function red1()
         for i, entry in ipairs(act) do
             local name = entry.name
             local status = entry.status
+modem.broadcast(6000, lastStatus[name])
+modem.broadcast(6000, status)
             if lastStatus[name] ~= status then
                 modem.broadcast(1, serialize({ name =name , wert = status } ))
                 lastStatus[name] = status
@@ -75,8 +77,8 @@ end
 modem.open(2)
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
-modem.broadcast(6000, e)
-modem.broadcast(6000, tostring(start))
+
+
     if e == "modem_message" then
         if port == 2 then
             message = unserialize(m)
