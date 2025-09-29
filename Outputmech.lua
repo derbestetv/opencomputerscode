@@ -53,7 +53,7 @@ while true do
                 
             end
         elseif port == 2 then
-            message = unserialize(m)
+            message = unserialize(msg)
 
             if message.addr == add then
                 if message.wert == "start" then
