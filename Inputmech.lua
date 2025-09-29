@@ -92,6 +92,10 @@ while true do
                     start = 1
                     red1()
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
+
+                elseif message.wert == "reload" then
+                    lastStatus = {}
+                    red1()
                 else
                     table.insert(colorNames, message.wert)
                     
