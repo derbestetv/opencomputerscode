@@ -1,9 +1,11 @@
-local rs, modem, eeprom = component.proxy(component.list("redstone")()), component.proxy(component.list("modem")()), component.proxy(component.list("eeprom")())
+local rs, modem, eeprom = component.proxy(component.list("redstone")()), component.proxy(component.list("modem")()),
+    component.proxy(component.list("eeprom")())
 local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
-local ac, ma, DOWN, UP, SOUTH, EAST, WEST = {"", "", "", "", ""}, "", 0, 1, 3, 4, 5
-local activeColors = {[0] = "", [1] = "", [3] = "",  [4] = "",  [5] = ""  }
+local ac, ma, DOWN, UP, SOUTH, EAST, WEST = { "", "", "", "", "" }, "", 0, 1, 3, 4, 5
+local activeColors = { [0] = "", [1] = "", [3] = "", [4] = "", [5] = "" }
 local start = 0
-local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown","green", "red", "black" }
+local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan",
+    "purple", "blue", "brown", "green", "red", "black" }
 local colorNames = {}
 function serialize(tbl)
     local function ser(val)
@@ -25,6 +27,7 @@ function serialize(tbl)
     end
     return ser(tbl)
 end
+
 -- Deserialisierung: String → Table
 function unserialize(str)
     local f, err = load("return " .. str, nil, "t", {})
@@ -41,34 +44,34 @@ while true do
     if e == "modem_message" then
         if port == 1 or port == 11 then
             local data = unserialize(msg)
-            for i, color in ipairs(colorBits) do
-                if color == data.name then
-                    if data.wert == "+" then
-                       rs.setBundledOutput(UP, i,0) 
-                    else
-                       rs.setBundledOutput(UP, i,255) 
+            for q, color1 in ipairs(colorNames) do
+                if color1["name"] == data.name then
+                    for i, color in ipairs(colorBits) do
+                        if color == color1["color"] then
+                            if data.wert == "+" then
+                                rs.setBundledOutput(UP, i, 0)
+                            else
+                                rs.setBundledOutput(UP, i, 255)
+                            end
+                            break
+                        end
+                        
                     end
-                    
+                    break
                 end
-                
             end
         elseif port == 2 then
             message = unserialize(msg)
 
             if message.addr == add then
                 if message.wert == "start" then
-                    
                     start = 1
-                 
-                    modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
 
-                
+                    modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 else
                     table.insert(colorNames, message.wert)
-                    
                 end
             end
         end
-        
     end
 end
