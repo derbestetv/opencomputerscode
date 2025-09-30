@@ -4,8 +4,7 @@ local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local ac, ma, DOWN, UP, SOUTH, EAST, WEST = { "", "", "", "", "" }, "", 0, 1, 3, 4, 5
 local activeColors = { [0] = "", [1] = "", [3] = "", [4] = "", [5] = "" }
 local start = 0
-local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan",
-    "purple", "blue", "brown", "green", "red", "black" }
+local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown", "green", "red", "black" }
 local colorNames = {}
 function serialize(tbl)
     local function ser(val)
@@ -49,9 +48,9 @@ while true do
                     for i, color in ipairs(colorBits) do
                         if color == color1["color"] then
                             if data.wert == "+" then
-                                rs.setBundledOutput(UP, i, 0)
+                                rs.setBundledOutput(UP, i-1, 0)
                             else
-                                rs.setBundledOutput(UP, i, 255)
+                                rs.setBundledOutput(UP, i-1, 255)
                             end
                             break
                         end
