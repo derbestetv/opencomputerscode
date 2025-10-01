@@ -1,4 +1,4 @@
-local rs, modem, eeprom = component.proxy(component.list("redstone")()), component.proxy(component.list("modem")()),
+local modem, eeprom =  component.proxy(component.list("modem")()),
     component.proxy(component.list("eeprom")())
 local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local ac, ma, DOWN, UP, SOUTH, EAST, WEST = { "", "", "", "", "" }, "", 0, 1, 3, 4, 5
