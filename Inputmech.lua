@@ -87,18 +87,20 @@ while true do
             message = unserialize(m)
 
             if message.addr == add then
-                if message.wert == "start" then
+             
+                    table.insert(colorNames, message.wert)
                     
+                
+            elseif message.addr =="all" then
+                if message.wert == "start" then
                     start = 1
-                    red1()
-                    modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
 
+                    modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 elseif message.wert == "reload" then
                     lastStatus = {}
                     red1()
-                else
-                    table.insert(colorNames, message.wert)
-                    
+
+                
                 end
             end
         end
