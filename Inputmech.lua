@@ -94,7 +94,7 @@ while true do
             elseif message.addr =="all" then
                 if message.wert == "start" then
                     start = 1
-
+                    red1()
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 elseif message.wert == "reload" then
                     lastStatus = {}
