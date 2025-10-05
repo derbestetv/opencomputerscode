@@ -67,6 +67,7 @@ while true do
         else
             --{1 = {F1={...}},2={F2={...}},...}
             --{F1={...}}
+            message = unserialize(m)
                 stat[message.name] = message.wert
             for i, fs1 in ipairs(fs) do
                 for key1,stellall in pairs(fs1) do
