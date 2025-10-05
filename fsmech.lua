@@ -55,6 +55,7 @@ while true do
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 end
             end
+
         else
             --{1 = {F1={...}},2={F2={...}},...}
             --{F1={...}}
