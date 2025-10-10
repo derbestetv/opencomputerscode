@@ -52,16 +52,13 @@ while true do
                 end
             elseif message.addr == "all" then
                 if message.wert == "start" then
-                    --modem.broadcast(6002, serialize(fs))
                     start = 1
-
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 end
             end
         else
             message = unserialize(m)
             stat[message.name] = message.wert
-
             for i, fs_entry in ipairs(fs) do
                 if type(fs_entry) == "table" then
                     for fahrweg_name, stell_all in pairs(fs_entry) do
