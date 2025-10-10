@@ -52,6 +52,8 @@ while true do
                 end
             end
         else
+
+            
             message = unserialize(m)
             stat[message.name] = message.wert
             for i, fs_entry in ipairs(fs) do
@@ -61,12 +63,13 @@ while true do
                             
                             local all_match = true
                             for signal_name, required_value in pairs(stell_all) do
-                                modem.broadcast(6002, "Stellung ".. required_value)
                                 if signal_name ~="Stellung" then
                                 if stat[signal_name] ~= required_value then
                                     all_match = false
                                     break
                                 end
+                            else
+                                modem.broadcast(6002, "Stellung ".. required_value)
                             end
                             end
                             if all_match then
