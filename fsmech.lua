@@ -5,7 +5,7 @@ local ac, ma, DOWN, UP, SOUTH, EAST, WEST = { "", "", "", "", "" }, "", 0, 1, 3,
 local activeColors = { [0] = "", [1] = "", [3] = "", [4] = "", [5] = "" }
 local fs = {}
 local stat = {}
-modem.broadcast(6000, add)
+modem.broadcast(6002, add)
 local start = 0
 function serialize(tbl)
     local function ser(val)
@@ -52,7 +52,7 @@ while true do
                 end
             elseif message.addr == "all" then
                 if message.wert == "start" then
-                    modem.broadcast(6001, serialize(fs))
+                    modem.broadcast(6002, serialize(fs))
                     start = 1
 
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
@@ -76,15 +76,15 @@ while true do
                     end
                     
                     if all_match then
-                        modem.broadcast(6001, fahrweg_name)
-                        modem.broadcast(6000, "TREFFER: " .. fahrweg_name)
+                        modem.broadcast(6002, fahrweg_name)
+                        modem.broadcast(6002, "TREFFER: " .. fahrweg_name)
                     end
                 else
-                    modem.broadcast(6000, "FEHLER: stell_all ist kein Table für " .. tostring(fahrweg_name))
+                    modem.broadcast(6002, "FEHLER: stell_all ist kein Table für " .. tostring(fahrweg_name))
                 end
             end
         else
-            modem.broadcast(6000, "FEHLER: fs_entry " .. i .. " ist kein Table  "..fs_entry)
+            modem.broadcast(6002, "FEHLER: fs_entry " .. i .. " ist kein Table  "..fs_entry)
         end
     end
 end
