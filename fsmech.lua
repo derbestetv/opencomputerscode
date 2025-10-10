@@ -66,6 +66,9 @@ while true do
                                 if signal_name == "Stellung" then
                                     modem.broadcast(6002, signal_name.." " .. required_value)
                                 else
+
+
+                                    
                                     if stat[signal_name] ~= required_value then
                                         all_match = false
                                         break
