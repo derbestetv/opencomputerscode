@@ -27,7 +27,6 @@ function serialize(tbl)
     end
     return ser(tbl)
 end
-
 -- Deserialisierung: String → Table
 function unserialize(str)
     local f, err = load("return " .. str, nil, "t", {})
@@ -38,8 +37,6 @@ modem.open(2)
 modem.open(1)
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
-
-
     if e == "modem_message" then
         if port == 2 then
             message = unserialize(m)
