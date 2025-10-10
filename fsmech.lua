@@ -27,12 +27,14 @@ function serialize(tbl)
     end
     return ser(tbl)
 end
+
 -- Deserialisierung: String → Table
 function unserialize(str)
     local f, err = load("return " .. str, nil, "t", {})
     if not f then return nil, err end
     return f()
 end
+
 modem.open(2)
 modem.open(1)
 while true do
@@ -52,25 +54,23 @@ while true do
                 end
             end
         else
-
-            
             message = unserialize(m)
             stat[message.name] = message.wert
             for i, fs_entry in ipairs(fs) do
                 if type(fs_entry) == "table" then
                     for fahrweg_name, stell_all in pairs(fs_entry) do
                         if type(stell_all) == "table" then
-                            
                             local all_match = true
+                             modem.broadcast(6002, serialize(stell_all))
                             for signal_name, required_value in pairs(stell_all) do
-                                if signal_name ~="Stellung" then
-                                if stat[signal_name] ~= required_value then
-                                    all_match = false
-                                    break
+                                if signal_name == "Stellung" then
+                                    modem.broadcast(6002, signal_name.." " .. required_value)
+                                else
+                                    if stat[signal_name] ~= required_value then
+                                        all_match = false
+                                        break
+                                    end
                                 end
-                            else
-                                modem.broadcast(6002, "Stellung ".. required_value)
-                            end
                             end
                             if all_match then
                                 modem.broadcast(6002, fahrweg_name)
