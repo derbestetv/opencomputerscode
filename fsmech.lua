@@ -46,7 +46,10 @@ while true do
             message = unserialize(m)
 
             if message.addr == add then
+                if message.wert == "start" then
+                else
                 table.insert(fs, message.wert)
+                end
             elseif message.addr == "all" then
                 if message.wert == "start" then
                     modem.broadcast(6001, serialize(fs))
