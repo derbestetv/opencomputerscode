@@ -74,7 +74,6 @@ while true do
                             break
                         end
                     end
-                    
                     if all_match then
                         modem.broadcast(6002, fahrweg_name)
                         modem.broadcast(6002, "TREFFER: " .. fahrweg_name)
