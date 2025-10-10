@@ -61,7 +61,7 @@ while true do
                             
                             local all_match = true
                             for signal_name, required_value in pairs(stell_all) do
-modem.broadcast(6002, "Stellung ".. required_value)
+                                modem.broadcast(6002, "Stellung ".. required_value)
                                 if signal_name ~="Stellung" then
                                 if stat[signal_name] ~= required_value then
                                     all_match = false
