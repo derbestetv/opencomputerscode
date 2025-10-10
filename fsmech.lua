@@ -7,6 +7,7 @@ local fs = {}
 local stat = {}
 modem.broadcast(6002, add)
 local start = 0
+
 function serialize(tbl)
     local function ser(val)
         if type(val) == "number" then
@@ -37,6 +38,7 @@ end
 
 modem.open(2)
 modem.open(1)
+
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
     if e == "modem_message" then
@@ -56,35 +58,47 @@ while true do
         else
             message = unserialize(m)
             stat[message.name] = message.wert
+            
+            -- DEBUG: Zeige was in stat aktualisiert wurde
+            modem.broadcast(6002, "STAT UPDATE: " .. message.name .. " = " .. tostring(message.wert))
+            
             for i, fs_entry in ipairs(fs) do
                 if type(fs_entry) == "table" then
                     for fahrweg_name, stell_all in pairs(fs_entry) do
                         if type(stell_all) == "table" then
                             local all_match = true
-                             modem.broadcast(6002, serialize(stell_all))
+                            modem.broadcast(6002, "Prüfe Fahrweg: " .. fahrweg_name)
+                            
                             for signal_name, required_value in pairs(stell_all) do
-                                if signal_name == "Stellung" then
-                                    modem.broadcast(6002, signal_name.." " .. required_value)
-                                else
-
-
+                                if signal_name ~= "Stellung" then
+                                    -- DEBUG: Zeige Vergleich
+                                    local current_val = stat[signal_name]
+                                    modem.broadcast(6002, "  Signal: " .. signal_name .. 
+                                        " - Erwartet: '" .. tostring(required_value) .. 
+                                        "' - Aktuell: '" .. tostring(current_val) .. "'")
                                     
-                                    if stat[signal_name] ~= required_value then
+                                    if current_val ~= required_value then
                                         all_match = false
+                                        modem.broadcast(6002, "  FEHLGESCHLAGEN: " .. signal_name .. " stimmt nicht überein")
                                         break
+                                    else
+                                        modem.broadcast(6002, "  OK: " .. signal_name .. " stimmt überein")
                                     end
                                 end
                             end
+                            
                             if all_match then
-                                modem.broadcast(6002, fahrweg_name)
                                 modem.broadcast(6002, "TREFFER: " .. fahrweg_name)
+                                modem.broadcast(6001, fahrweg_name)
+                            else
+                                modem.broadcast(6002, "KEIN TREFFER für: " .. fahrweg_name)
                             end
                         else
                             modem.broadcast(6002, "FEHLER: stell_all ist kein Table für " .. tostring(fahrweg_name))
                         end
                     end
                 else
-                    modem.broadcast(6002, "FEHLER: fs_entry " .. i .. " ist kein Table  " .. fs_entry)
+                    modem.broadcast(6002, "FEHLER: fs_entry " .. i .. " ist kein Table: " .. type(fs_entry))
                 end
             end
         end
