@@ -34,7 +34,6 @@ function unserialize(str)
     if not f then return nil, err end
     return f()
 end
-
 modem.open(2)
 modem.open(1)
 while true do
@@ -44,7 +43,6 @@ while true do
     if e == "modem_message" then
         if port == 2 then
             message = unserialize(m)
-
             if message.addr == add then
                 if message.wert == "start" then
                 else
@@ -52,7 +50,6 @@ while true do
                 end
             elseif message.addr == "all" then
                 if message.wert == "start" then
-               
                     start = 1
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 end
