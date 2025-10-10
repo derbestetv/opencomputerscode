@@ -59,7 +59,7 @@ while true do
        else
     message = unserialize(m)
     stat[message.name] = message.wert
-    modem.broadcast(6001, serialize(fs[9]))
+   
     for i, fs_entry in ipairs(fs) do
         if type(fs_entry) == "table" then
             for fahrweg_name, stell_all in pairs(fs_entry) do
