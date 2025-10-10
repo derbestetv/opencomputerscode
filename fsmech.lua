@@ -81,7 +81,7 @@ while true do
                 end
             end
         else
-            --modem.broadcast(6000, "FEHLER: fs_entry " .. i .. " ist kein Table")
+            modem.broadcast(6000, "FEHLER: fs_entry " .. i .. " ist kein Table  "..fs_entry)
         end
     end
 end
