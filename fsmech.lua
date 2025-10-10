@@ -48,7 +48,7 @@ while true do
             if message.addr == add then
                 if message.wert == "start" then
                 else
-                table.insert(fs, message.wert)
+                    table.insert(fs, message.wert)
                 end
             elseif message.addr == "all" then
                 if message.wert == "start" then
@@ -58,34 +58,36 @@ while true do
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
                 end
             end
+        else
+            message = unserialize(m)
+            stat[message.name] = message.wert
 
-       else
-    message = unserialize(m)
-    stat[message.name] = message.wert
-   
-    for i, fs_entry in ipairs(fs) do
-        if type(fs_entry) == "table" then
-            for fahrweg_name, stell_all in pairs(fs_entry) do
-                if type(stell_all) == "table" then
-                    local all_match = true
-                    for signal_name, required_value in pairs(stell_all) do
-                        if stat[signal_name] ~= required_value then
-                            all_match = false
-                            break
+            for i, fs_entry in ipairs(fs) do
+                if type(fs_entry) == "table" then
+                    for fahrweg_name, stell_all in pairs(fs_entry) do
+                        if type(stell_all) == "table" then
+                            
+                            local all_match = true
+                            for signal_name, required_value in pairs(stell_all) do
+                                if signal_name ~="Stellung" then
+                                if stat[signal_name] ~= required_value then
+                                    all_match = false
+                                    break
+                                end
+                            end
+                            end
+                            if all_match then
+                                modem.broadcast(6002, fahrweg_name)
+                                modem.broadcast(6002, "TREFFER: " .. fahrweg_name)
+                            end
+                        else
+                            modem.broadcast(6002, "FEHLER: stell_all ist kein Table für " .. tostring(fahrweg_name))
                         end
                     end
-                    if all_match then
-                        modem.broadcast(6002, fahrweg_name)
-                        modem.broadcast(6002, "TREFFER: " .. fahrweg_name)
-                    end
                 else
-                    modem.broadcast(6002, "FEHLER: stell_all ist kein Table für " .. tostring(fahrweg_name))
+                    modem.broadcast(6002, "FEHLER: fs_entry " .. i .. " ist kein Table  " .. fs_entry)
                 end
             end
-        else
-            modem.broadcast(6002, "FEHLER: fs_entry " .. i .. " ist kein Table  "..fs_entry)
         end
-    end
-end
     end
 end
