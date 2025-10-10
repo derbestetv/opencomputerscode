@@ -52,7 +52,7 @@ while true do
                 end
             elseif message.addr == "all" then
                 if message.wert == "start" then
-                    modem.broadcast(6002, serialize(fs))
+                    --modem.broadcast(6002, serialize(fs))
                     start = 1
 
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
