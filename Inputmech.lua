@@ -60,11 +60,6 @@ local function getColorStatusList()
     end
     return statusList
 end
-
-
-
-
-
 local function red1()
         act = getColorStatusList()
         local changed = {}
