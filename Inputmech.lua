@@ -73,6 +73,7 @@ local function red1()
             local status = entry.status
             if lastStatus[name] ~= status then
                 modem.broadcast(1, serialize({ name =name , wert = status } ))
+
                 lastStatus[name] = status
             end
         end
@@ -87,12 +88,7 @@ while true do
             message = unserialize(m)
 
             if message.addr == add then
-             
-                    table.insert(colorNames, message.wert)
-                    
-                
-            elseif message.addr =="all" then
-                if message.wert == "start" then
+                     if message.wert == "start" then
                     start = 1
                     red1()
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start" }))
@@ -101,8 +97,11 @@ while true do
                     red1()
 
                 
+                else
+                    table.insert(colorNames, message.wert)
                 end
-            end
+            end  
+            
         end
         
     elseif e == "redstone_changed" and start > 0 then
