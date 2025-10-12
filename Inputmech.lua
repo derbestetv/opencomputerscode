@@ -86,7 +86,6 @@ while true do
     if e == "modem_message" then
         if port == 2 then
             message = unserialize(m)
-
             if message.addr == add then
                      if message.wert == "start" then
                     start = 1
@@ -95,8 +94,6 @@ while true do
                 elseif message.wert == "reload" then
                     lastStatus = {}
                     red1()
-
-                
                 else
                     table.insert(colorNames, message.wert)
                 end
