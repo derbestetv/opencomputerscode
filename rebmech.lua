@@ -54,7 +54,7 @@ while true do
                     start = 1
                     modem.broadcast(2, serialize({ addr = "fs", wert = "start1" }))
                     sleep(10)
-                     modem.broadcast(1, serialize({ name =name , wert = status } ))
+                     modem.broadcast(1, serialize({ name ="nsdfssdfsdfsdfdsfdf" , wert = "+" } ))
                 
                 end
             end  
