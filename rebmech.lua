@@ -34,11 +34,10 @@ function unserialize(str)
     if not f then return nil, err end
     return f()
 end
-function sleep(seconds)
-    local deadline = computer.uptime() + seconds
-    while computer.uptime() < deadline do
-        -- Warte
-    end
+
+  function sleep(seconds)
+    computer.pullSignal(seconds)
+
 end
 
 
@@ -51,10 +50,10 @@ while true do
             message = unserialize(m)
             if message.addr == add then
                      if message.wert == "start" then
-                    start = 1
-                    modem.broadcast(2, serialize({ addr = "fs", wert = "start1" }))
-                    sleep(10)
-                     modem.broadcast(1, serialize({ name ="nsdfssdfsdfsdfdsfdf" , wert = "+" } ))
+                        start = 1
+                        modem.broadcast(2, serialize({ addr = "fs", wert = "start1" }))
+                        sleep(10)
+                        modem.broadcast(1, serialize({ name ="nsdfssdfsdfsdfdsfdf" , wert = "+" } ))
                 
                 end
             end  
