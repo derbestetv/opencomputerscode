@@ -52,7 +52,7 @@ while true do
                      if message.wert == "start" then
                         start = 1
                         modem.broadcast(2, serialize({ addr = "fs", wert = "start1" }))
-                        sleep(10)
+                        sleep(20)
                         modem.broadcast(1, serialize({ name ="nsdfssdfsdfsdfdsfdf" , wert = "+" } ))
                 
                 end
