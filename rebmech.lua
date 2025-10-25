@@ -34,15 +34,17 @@ function unserialize(str)
     if not f then return nil, err end
     return f()
 end
-
-  function sleep(seconds)
+function sleep(seconds)
     computer.pullSignal(seconds)
-
 end
 modem.open(2)
+
+
+
+
+
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
-
     if e == "modem_message" then
         if port == 2 then
             message = unserialize(m)
