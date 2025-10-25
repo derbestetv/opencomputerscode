@@ -39,8 +39,6 @@ end
     computer.pullSignal(seconds)
 
 end
-
-
 modem.open(2)
 while true do
     local e, _, from, port, _, m = computer.pullSignal()
