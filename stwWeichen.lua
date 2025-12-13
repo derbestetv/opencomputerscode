@@ -54,7 +54,7 @@ while #zustaendigkeit == 0 do
   if not data then goto continue end
    if data.id ~= add then goto continue end
     if data.event == "zustaendigkeit_response" and data.id == add then
-    zustaendigkeit = data.zustaendigkeit
+    zustaendigkeit = unserialize(data.zustaendigkeit)
      modem.broadcast(PORT, serialize({event = "ack", id = add, zustaendigkeit = data.zustaendigkeit}))
   end
   
