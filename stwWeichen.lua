@@ -41,7 +41,7 @@ local function setRedstone(lage, id)
             return
         end
        rs.setBundledOutput(REDSTONE_SIDE, i, 0)
-    
+    end
 end
 
 modem.broadcast(PORT, serialize({event = "zustaendigkeit_request", id = add}))
@@ -81,7 +81,7 @@ while true do
     setRedstone(data.lage, data.id)
     modem.broadcast(PORT, serialize({event = "ack", id = data.id, lage = data.lage}))
  
-end
+  end
   
   ::continue::
 end
