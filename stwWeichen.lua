@@ -3,7 +3,7 @@ local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local PORT = 1234
 local zustaendigkeit = {}
 local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown", "green", "red", "black" }
-local REDSTONE_SIDE = 5
+local REDSTONE_SIDE = 1
 
 modem.open(PORT)
 
@@ -33,9 +33,18 @@ end
 local function setRedstone(lage, id)
     for i, MY_ID in ipairs(zustaendigkeit) do
         if tonumber(id) == tonumber(MY_ID) then
-            local colorIndex = i - 1  -- Colors are 0-indexed (0=white, 1=orange, etc.)
-            local level = (lage == "-") and 15 or 0
-            redstone.setBundledOutput(REDSTONE_SIDE, colorIndex, level)
+            local colorIndex = i - 1
+            local level = (lage == "-") and 255 or 0
+            
+            -- Get current values first
+            local currentValues = redstone.getBundledOutput(1) or {}  -- 1 = top
+            
+            -- Update only the specific color
+            currentValues[colorIndex] = level
+            
+            -- Set all values at once
+            redstone.setBundledOutput(REDSTONE_SIDE, currentValues)  -- 1 = top
+            
             modem.broadcast(9999, "Set redstone for ID " .. id .. " color " .. colorBits[i] .. " (index " .. colorIndex .. ") to " .. level)
             return
         end
