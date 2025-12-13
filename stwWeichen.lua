@@ -3,6 +3,7 @@ local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local PORT = 1234
 local zustaendigkeit = {}
 local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown", "green", "red", "black" }
+local colorValues = { 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800, 0x1000, 0x2000, 0x4000, 0x8000 }  -- colors API values
 local REDSTONE_SIDE = 5
 
 modem.open(PORT)
@@ -32,16 +33,15 @@ end
 
 local function setRedstone(lage, id)
     for i, MY_ID in ipairs(zustaendigkeit) do
-        if tonumber(id) == tonumber(MY_ID) then  -- Ensure both are numbers
-            if lage == "-" then
-                redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 255)
-            else
-                redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 0)
-            end
-            modem.broadcast(9999, "Set redstone for ID " .. id .. " at index " .. i)
+        if tonumber(id) == tonumber(MY_ID) then
+            local colorValue = colorValues[i]  -- Get the actual color API value
+            local level = (lage == "-") and 15 or 0
+            redstone.setBundledOutput(REDSTONE_SIDE, colorValue, level)
+            modem.broadcast(9999, "Set redstone for ID " .. id .. " color " .. colorBits[i] .. " to " .. level)
             return
         end
     end
+    modem.broadcast(9999, "ID " .. id .. " not found in zustaendigkeit")
 end
 
 modem.broadcast(PORT, serialize({event = "zustaendigkeit_request", id = add}))
@@ -62,10 +62,11 @@ while #zustaendigkeit == 0 do
   
   ::continue::
 end
- for i , MY_ID in ipairs(zustaendigkeit) do
-modem.broadcast(9999,"request_lage    "..MY_ID)
-modem.broadcast(PORT, serialize({event = "request_lage", id = MY_ID}))
- end
+
+for i , MY_ID in ipairs(zustaendigkeit) do
+  modem.broadcast(9999,"request_lage    "..MY_ID)
+  modem.broadcast(PORT, serialize({event = "request_lage", id = MY_ID}))
+end
 
 while true do
   local eventType, _, from, port, _, message = computer.pullSignal()
@@ -76,10 +77,8 @@ while true do
   local data = unserialize(message)
   if not data then goto continue end
   
-  -- Convert ID to number if it's a string
   local dataId = tonumber(data.id) or data.id
   
-  -- Check if this ID is in our zustaendigkeit
   local isResponsible = false
   for i, MY_ID in ipairs(zustaendigkeit) do
     if dataId == MY_ID then
