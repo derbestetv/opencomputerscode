@@ -51,7 +51,7 @@ while #zustaendigkeit == 0 do
   
   if eventType ~= "modem_message" then goto continue end
   if port ~= PORT then goto continue end
-  
+  modem.broadcast(9999,#zustaendigkeit.."   ID    "..message)
   local data = unserialize(message)
   if not data then goto continue end
    if data.id ~= add then goto continue end
