@@ -33,14 +33,14 @@ local function unserialize(str)
 end
 
 local function setRedstone(lage, id)
-    for i , MY_ID in ipairs({zustaendigkeit}) do
+    for i , MY_ID in ipairs(zustaendigkeit) do
         if id ~= MY_ID then return end
         if lage == "-" then
-            rs.setBundledOutput(REDSTONE_SIDE, i, 255)
+            redstone.setBundledOutput(REDSTONE_SIDE, i, 255)
             
             return
         end
-        rs.setBundledOutput(REDSTONE_SIDE, i, 0)
+        redstone.setBundledOutput(REDSTONE_SIDE, i, 0)
     end
 end
 
@@ -62,8 +62,9 @@ while #zustaendigkeit == 0 do
   
   ::continue::
 end
+ for i , MY_ID in ipairs(zustaendigkeit) do
 modem.broadcast(PORT, serialize({event = "request_lage", id = MY_ID}))
-
+ end
 
 while true do
   local eventType, _, from, port, _, message = computer.pullSignal()
