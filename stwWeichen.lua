@@ -36,11 +36,11 @@ local function setRedstone(lage, id)
     for i , MY_ID in ipairs(zustaendigkeit) do
         if id ~= MY_ID then return end
         if lage == "-" then
-            redstone.setBundledOutput(REDSTONE_SIDE, i, 255)
+            redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 255)
             
             return
         end
-        redstone.setBundledOutput(REDSTONE_SIDE, i, 0)
+        redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 0)
     end
 end
 
@@ -63,6 +63,7 @@ while #zustaendigkeit == 0 do
   ::continue::
 end
  for i , MY_ID in ipairs(zustaendigkeit) do
+modem.broadcast(9999,"request_lage    "..MY_ID)
 modem.broadcast(PORT, serialize({event = "request_lage", id = MY_ID}))
  end
 
@@ -79,6 +80,7 @@ while true do
   end
 
   if data.event == "umstellauftrag" or data.event == "lage_response" then
+    modem.broadcast(9999,"umstellauftrag    "..data.id)
     setRedstone(data.lage, data.id)
     modem.broadcast(PORT, serialize({event = "ack", id = data.id, lage = data.lage}))
  
