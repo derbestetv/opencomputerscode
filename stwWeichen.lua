@@ -7,8 +7,6 @@ local REDSTONE_SIDE = 5
 
 modem.open(PORT)
 
-
-
 local function serialize(tbl)
   local function ser(val)
     if type(val) == "number" then return tostring(val)
