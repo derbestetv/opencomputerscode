@@ -73,15 +73,22 @@ while true do
   
   local data = unserialize(message)
   if not data then goto continue end
-  for i , MY_ID in ipairs({zustaendigkeit}) do
-  if data.id ~= MY_ID then goto continue end
+  
+  -- Check if this ID is in our zustaendigkeit
+  local isResponsible = false
+  for i, MY_ID in ipairs(zustaendigkeit) do  -- Remove the {} wrapping!
+    if data.id == MY_ID then
+      isResponsible = true
+      break
+    end
   end
-
+  
+  if not isResponsible then goto continue end
+  
   if data.event == "umstellauftrag" or data.event == "lage_response" then
-    modem.broadcast(9999,"umstellauftrag    "..data.id)
+    modem.broadcast(9999, "umstellauftrag " .. data.id)
     setRedstone(data.lage, data.id)
     modem.broadcast(PORT, serialize({event = "ack", id = data.id, lage = data.lage}))
- 
   end
   
   ::continue::
