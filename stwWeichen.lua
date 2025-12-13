@@ -31,14 +31,16 @@ local function unserialize(str)
 end
 
 local function setRedstone(lage, id)
-    for i , MY_ID in ipairs(zustaendigkeit) do
-        if id ~= MY_ID then return end
-        if lage == "-" then
-            redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 255)
-            
+    for i, MY_ID in ipairs(zustaendigkeit) do
+        if tonumber(id) == tonumber(MY_ID) then  -- Ensure both are numbers
+            if lage == "-" then
+                redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 255)
+            else
+                redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 0)
+            end
+            modem.broadcast(9999, "Set redstone for ID " .. id .. " at index " .. i)
             return
         end
-        redstone.setBundledOutput(REDSTONE_SIDE, colorBits[i], 0)
     end
 end
 
