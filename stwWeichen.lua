@@ -2,6 +2,7 @@ local redstone, modem, eeprom = component.proxy(component.list("redstone")()), c
 local add, microType = eeprom.getLabel(), eeprom.getLabel():match("([^%s]+)")
 local PORT = 1234
 local zustaendigkeit = {}
+local colorMap = {} -- id (as string) -> color index (1-based for colorBits)
 local colorBits = { "white", "orange", "magenta", "lightBlue", "yellow", "lime", "pink", "gray", "lightGray", "cyan", "purple", "blue", "brown", "green", "red", "black" }
 local REDSTONE_SIDE = 1
 
@@ -31,25 +32,20 @@ local function unserialize(str)
 end
 
 local function setRedstone(lage, id)
-    for i, MY_ID in ipairs(zustaendigkeit) do
-        if tonumber(id) == tonumber(MY_ID) then
-            local colorIndex = i - 1
-            local level = (lage == "-") and 255 or 0
-            
-            -- Get current values first
-            local currentValues = redstone.getBundledOutput(1) or {}  -- 1 = top
-            
-            -- Update only the specific color
-            currentValues[colorIndex] = level
-            
-            -- Set all values at once
-            redstone.setBundledOutput(REDSTONE_SIDE, currentValues)  -- 1 = top
-            
-            modem.broadcast(9999, "Set redstone for ID " .. id .. " color " .. colorBits[i] .. " (index " .. colorIndex .. ") to " .. level)
-            return
-        end
-    end
+  local idx = colorMap[tostring(id)] or colorMap[id]
+  if not idx then
     modem.broadcast(9999, "ID " .. id .. " not found in zustaendigkeit")
+    return
+  end
+
+  local colorIndex = idx - 1 -- bundled index
+  local level = (lage == "-") and 255 or 0
+
+  local currentValues = redstone.getBundledOutput(REDSTONE_SIDE) or {}
+  currentValues[colorIndex] = level
+  redstone.setBundledOutput(REDSTONE_SIDE, currentValues)
+
+  modem.broadcast(9999, "Set redstone for ID " .. id .. " color " .. (colorBits[idx] or "?") .. " (index " .. colorIndex .. ") to " .. level)
 end
 
 modem.broadcast(PORT, serialize({event = "zustaendigkeit_request", id = add}))
@@ -65,6 +61,10 @@ while #zustaendigkeit == 0 do
    if data.id ~= add then goto continue end
     if data.event == "zustaendigkeit_response" and data.id == add then
     zustaendigkeit = unserialize(data.zustaendigkeit)
+    colorMap = {}
+    for i, MY_ID in ipairs(zustaendigkeit) do
+      colorMap[tostring(MY_ID)] = i -- first entry -> white, second -> orange, ...
+    end
      modem.broadcast(PORT, serialize({event = "ack", id = add, zustaendigkeit = data.zustaendigkeit}))
   end
   
