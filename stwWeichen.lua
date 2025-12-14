@@ -56,16 +56,25 @@ while #zustaendigkeit == 0 do
   if eventType ~= "modem_message" then goto continue end
   if port ~= PORT then goto continue end
   modem.broadcast(9999,#zustaendigkeit.."   ID    "..message)
+
   local data = unserialize(message)
+
   if not data then goto continue end
-   if data.id ~= add then goto continue end
-    if data.event == "zustaendigkeit_response" and data.id == add then
-    zustaendigkeit = unserialize(data.zustaendigkeit)
-    colorMap = {}
-    for i, MY_ID in ipairs(zustaendigkeit) do
-      colorMap[tostring(MY_ID)] = i -- first entry -> white, second -> orange, ...
-    end
-     modem.broadcast(PORT, serialize({event = "ack", id = add, zustaendigkeit = data.zustaendigkeit}))
+  if data.id ~= add then goto continue end
+
+  if data.event == "initial_startup" then
+    modem.broadcast(PORT, serialize({event = "zustaendigkeit_request", id = add}))
+  end
+
+  if data.event == "zustaendigkeit_response" and data.id == add then
+  zustaendigkeit = unserialize(data.zustaendigkeit)
+  colorMap = {}
+
+  for i, MY_ID in ipairs(zustaendigkeit) do
+    colorMap[tostring(MY_ID)] = i -- first entry -> white, second -> orange, ...
+  end
+
+  modem.broadcast(PORT, serialize({event = "ack", id = add, zustaendigkeit = data.zustaendigkeit}))
   end
   
   ::continue::
